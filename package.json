@@ -1,0 +1,20 @@
+{
+  "name": "shark",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SHARK. An UNTAMED game nobody wants to win.",
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/status-bar": "^8.0.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "@fontsource/press-start-2p": "^5.2.5",
+    "@fontsource/space-mono": "^5.2.5"
+  }
+}

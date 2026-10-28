@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SHARK fin, from SHARK_ICON.svg, centred inside the adaptive icon safe zone -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:scaleX="0.0888" android:scaleY="0.0888" android:translateX="6.05" android:translateY="6.05">
+        <path android:fillColor="#FFFFFF" android:pathData="M712.7,625.6c58.3,11.9,114.1,32.2,165.4,61.8-55.2-17.7-110.3-31.4-167.1-41-52.7-8.9-106-14.4-159.4-16.2-102.9-3.5-204.8,14.1-300,53l-49.7,22.2c22.5-14.3,46.3-25.6,70.6-36.8,41.2-18.4,83.3-32.9,127.4-43.1,7.7-6.2,14.5-12.4,21.2-19.7,50.3-54.3,49.8-129.2,17.1-193.1s-14.4-25.3-22.5-37.9c32.5.5,65.4,11.6,94.2,26.6,32.7,17.1,61.2,40,85.7,67.5,19,21.4,35.5,44.2,51.1,68.2l43.3,71c-22.4-3.9-43.6-7.4-66-9.7-47-4.9-93.5-2.3-139.4,8.4l-20.1,5c29.6-3.2,58.1-5,87.8-4.1,53.7,1.7,107,7.1,160.2,17.9Z"/>
+    </group>
+</vector>

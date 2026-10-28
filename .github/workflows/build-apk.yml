@@ -1,0 +1,71 @@
+name: Build SHARK APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Add Android 16 (SDK 36) to the runner's Android SDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Copy the app into the Android project
+        run: npx cap sync android
+
+      - name: Prepare the signing key
+        env:
+          RAW_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          PW=$(printf '%s' "$RAW_PASSWORD" | tr -d ' \r\n\t')
+          if [ -z "$PW" ]; then echo "::error::Add the KEYSTORE_PASSWORD secret (Settings > Secrets and variables > Actions), then run this again"; exit 1; fi
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in android/app/shark-release.jks.enc -out android/app/shark-release.jks -pass "pass:$PW" || { echo "::error::KEYSTORE_PASSWORD does not match the signing key"; exit 1; }
+
+      - name: Build the APK
+        working-directory: android
+        env:
+          RAW_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          export SK_STORE_PASSWORD=$(printf '%s' "$RAW_PASSWORD" | tr -d ' \r\n\t')
+          export SK_KEY_PASSWORD="$SK_STORE_PASSWORD"
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Name the APK
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          cp android/app/build/outputs/apk/release/app-release.apk "SHARK-${VERSION}-build${{ github.run_number }}.apk"
+          echo "APK=SHARK-${VERSION}-build${{ github.run_number }}.apk" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: SHARK-APK
+          path: ${{ env.APK }}
+
+      - name: Publish as the latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest "${{ env.APK }}" --title "SHARK build ${{ github.run_number }}" --notes "Install this APK on the phone. Each build replaces the previous one and keeps your data." --latest

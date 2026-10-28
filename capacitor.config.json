@@ -1,0 +1,13 @@
+{
+  "appId": "mu.untamed.shark",
+  "appName": "SHARK",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#0E0E10"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css"
+    }
+  }
+}
